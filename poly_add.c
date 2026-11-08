@@ -19,7 +19,6 @@ struct node *readPolynomial();
 void appendTerm(struct node **head, struct node **tail, int coeff, int exp);
 struct node *addPolynomials(struct node *p1, struct node *p2);
 void display(struct node *head);
-void freeList(struct node *head);
 
 int main()
 {
@@ -41,10 +40,6 @@ int main()
 
     printf("Sum               : ");
     display(sum);
-
-    freeList(poly1);
-    freeList(poly2);
-    freeList(sum);
 
     return 0;
 }
@@ -112,13 +107,6 @@ struct node *readPolynomial()
     {
         printf("Enter coefficient and exponent of term %d: ", i);
         scanf("%d %d", &coeff, &exp);
-
-        if(exp < 0)
-        {
-            printf("Exponent cannot be negative. Enter the term again.\n");
-            i--;
-            continue;
-        }
 
         head = insertTerm(head, coeff, exp);
     }
@@ -238,15 +226,3 @@ void display(struct node *head)
     printf("\n");
 }
 
-void freeList(struct node *head)
-{
-    struct node *temp;
-
-    // Free every node of the list
-    while(head != NULL)
-    {
-        temp = head;
-        head = head->next;
-        free(temp);
-    }
-}
