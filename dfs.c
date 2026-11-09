@@ -1,206 +1,183 @@
-// Name   : Depth First Search (DFS) on Graphs
-// Aim    : To create an undirected graph using an adjacency matrix and traverse it using DFS
+
+// Name   : Graph Traversal Using Adjacency List
+// Aim    : To create a graph using adjacency list and
+//          traverse it using BFS and DFS
 // Author : Shanu S
-// Date   : 05/10/26
+// Date   : 09/11/26
 
 #include <stdio.h>
+#include <stdlib.h>
+#define MAX 100
 
-#define MAX 20
+struct node
+{
+    int vertex;
+    struct node *next;
+};
 
-int adj[MAX][MAX];
-int visited[MAX];
-int n = 0;
+struct node *adj[MAX];
+int visited[MAX], n;
 
 // Function Prototypes
 void createGraph();
-void displayMatrix();
-void dfsRecursive(int v);
-void dfsIterative(int start);
+void insertEdge(int u, int v);
+void BFS(int start);
+void DFS(int start);
+void resetVisited();
 
 int main()
 {
-    int choice, start, i;
+    int choice, start;
 
-    while(1)
+    createGraph();
+
+    do
     {
-        printf("\n--- DFS on Graph ---");
-        printf("\n1. Create Graph");
-        printf("\n2. Display Adjacency Matrix");
-        printf("\n3. DFS Traversal (Recursive)");
-        printf("\n4. DFS Traversal (Iterative)");
-        printf("\n5. Exit");
-
-        printf("\nEnter choice: ");
+        printf("\n--- Graph Traversal Menu ---\n");
+        printf("1. BFS Traversal\n");
+        printf("2. DFS Traversal\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
         scanf("%d", &choice);
 
         switch(choice)
         {
             case 1:
-                createGraph();
-                break;
-
-            case 2:
-                displayMatrix();
-                break;
-
-            case 3:
-                if(n == 0)
-                {
-                    printf("Create the graph first.\n");
-                    break;
-                }
-
-                printf("Enter starting vertex (0 to %d): ", n - 1);
+                printf("Enter starting vertex: ");
                 scanf("%d", &start);
 
                 if(start < 0 || start >= n)
                 {
-                    printf("Invalid vertex.\n");
+                    printf("Invalid vertex\n");
                     break;
                 }
 
-                // Reset the visited array before every traversal
-                for(i = 0; i < n; i++)
-                    visited[i] = 0;
-
-                printf("DFS Traversal (Recursive): ");
-                dfsRecursive(start);
+                resetVisited();
+                printf("BFS Traversal: ");
+                BFS(start);
                 printf("\n");
                 break;
 
-            case 4:
-                if(n == 0)
-                {
-                    printf("Create the graph first.\n");
-                    break;
-                }
-
-                printf("Enter starting vertex (0 to %d): ", n - 1);
+            case 2:
+                printf("Enter starting vertex: ");
                 scanf("%d", &start);
 
                 if(start < 0 || start >= n)
-                    printf("Invalid vertex.\n");
-                else
-                    dfsIterative(start);
+                {
+                    printf("Invalid vertex\n");
+                    break;
+                }
+
+                resetVisited();
+                printf("DFS Traversal: ");
+                DFS(start);
+                printf("\n");
                 break;
 
-            case 5:
-                return 0;
+            case 3:
+                printf("Exiting...\n");
+                break;
 
             default:
-                printf("Invalid choice.\n");
+                printf("Invalid choice\n");
         }
-    }
+
+    } while(choice != 3);
+
+    return 0;
 }
 
+// Function to insert an edge
+void insertEdge(int u, int v)
+{
+    struct node *newnode;
+
+    newnode = (struct node *)malloc(sizeof(struct node));
+
+    newnode->vertex = v;
+    newnode->next = adj[u];
+    adj[u] = newnode;
+}
+
+// Function to create graph
 void createGraph()
 {
-    int edges, i, j, u, v;
+    int i, edges, u, v;
 
-    printf("Enter number of vertices (maximum %d): ", MAX);
+    printf("Enter number of vertices: ");
     scanf("%d", &n);
 
-    if(n <= 0 || n > MAX)
-    {
-        printf("Invalid number of vertices.\n");
-        n = 0;
-        return;
-    }
-
-    // Initialize the adjacency matrix with zeros
     for(i = 0; i < n; i++)
-        for(j = 0; j < n; j++)
-            adj[i][j] = 0;
+        adj[i] = NULL;
 
     printf("Enter number of edges: ");
     scanf("%d", &edges);
 
-    for(i = 1; i <= edges; i++)
+    printf("Enter edges (u v):\n");
+
+    for(i = 0; i < edges; i++)
     {
-        printf("Enter edge %d (u v): ", i);
         scanf("%d %d", &u, &v);
 
-        if(u < 0 || u >= n || v < 0 || v >= n)
-        {
-            printf("Invalid vertices. Enter the edge again.\n");
-            i--;
-            continue;
-        }
-
-        // Undirected graph: set both entries
-        adj[u][v] = 1;
-        adj[v][u] = 1;
-    }
-
-    printf("Graph created successfully.\n");
-}
-
-void displayMatrix()
-{
-    int i, j;
-
-    if(n == 0)
-    {
-        printf("Create the graph first.\n");
-        return;
-    }
-
-    printf("Adjacency Matrix:\n");
-
-    for(i = 0; i < n; i++)
-    {
-        for(j = 0; j < n; j++)
-            printf("%d ", adj[i][j]);
-
-        printf("\n");
+        insertEdge(u, v);
+        insertEdge(v, u);
     }
 }
 
-void dfsRecursive(int v)
+// Function to reset visited array
+void resetVisited()
 {
     int i;
 
-    // Visit the current vertex
-    visited[v] = 1;
-    printf("%d ", v);
-
-    // Recursively visit every unvisited neighbour
     for(i = 0; i < n; i++)
+        visited[i] = 0;
+}
+
+// Function for BFS traversal
+void BFS(int start)
+{
+    int queue[MAX], front = 0, rear = 0;
+    struct node *temp;
+    int vertex;
+
+    visited[start] = 1;
+    queue[rear++] = start;
+
+    while(front < rear)
     {
-        if(adj[v][i] == 1 && !visited[i])
-            dfsRecursive(i);
+        vertex = queue[front++];
+        printf("%d ", vertex);
+
+        temp = adj[vertex];
+
+        while(temp != NULL)
+        {
+            if(visited[temp->vertex] == 0)
+            {
+                visited[temp->vertex] = 1;
+                queue[rear++] = temp->vertex;
+            }
+
+            temp = temp->next;
+        }
     }
 }
 
-void dfsIterative(int start)
+// Function for DFS traversal
+void DFS(int start)
 {
-    int stack[MAX * MAX];
-    int top = -1;
-    int seen[MAX] = {0};
-    int v, i;
+    struct node *temp;
 
-    stack[++top] = start;
+    visited[start] = 1;
+    printf("%d ", start);
 
-    printf("DFS Traversal (Iterative): ");
+    temp = adj[start];
 
-    while(top != -1)
+    while(temp != NULL)
     {
-        // Remove the vertex on top of the stack
-        v = stack[top--];
+        if(visited[temp->vertex] == 0)
+            DFS(temp->vertex);
 
-        if(!seen[v])
-        {
-            seen[v] = 1;
-            printf("%d ", v);
-
-            // Push neighbours in reverse order so the smallest is visited first
-            for(i = n - 1; i >= 0; i--)
-            {
-                if(adj[v][i] == 1 && !seen[i])
-                    stack[++top] = i;
-            }
-        }
+        temp = temp->next;
     }
-
-    printf("\n");
 }
