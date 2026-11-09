@@ -56,6 +56,7 @@ int main()
                     printf("Array: ");
                     display(a, n);
                 }
+
                 break;
 
             case 3:
@@ -109,29 +110,31 @@ void quickSort(int a[], int low, int high)
 int partition(int a[], int low, int high)
 {
     int pivot = a[low];
-    int i = low + 1, j = high, temp;
+    int start = low + 1;
+    int end = high;
+    int temp;
 
-    while(i <= j)
+    while(start <= end)
     {
-        while(i <= high && a[i] <= pivot)
-            i++;
+        while(start <= high && a[start] <= pivot)
+            start++;
 
-        while(a[j] > pivot)
-            j--;
+        while(a[end] > pivot)
+            end--;
 
-        if(i < j)
+        if(start < end)
         {
-            temp = a[i];
-            a[i] = a[j];
-            a[j] = temp;
+            temp = a[start];
+            a[start] = a[end];
+            a[end] = temp;
         }
     }
 
     temp = a[low];
-    a[low] = a[j];
-    a[j] = temp;
+    a[low] = a[end];
+    a[end] = temp;
 
-    return j;
+    return end;
 }
 
 // Display Function
