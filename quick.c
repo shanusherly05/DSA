@@ -1,18 +1,15 @@
+
 // Name : Quick Sort
 // Aim : To sort a list of numbers in ascending order using quick sort
 // Author : Shanu S
 // Date : 25/10/26
 
 #include <stdio.h>
-
 #define MAX 100
 
 // Function Prototypes
-// Sorts the array in ascending order using quick sort
 void quickSort(int a[], int low, int high);
-// Places the pivot (last element) at its correct position and returns that position
 int partition(int a[], int low, int high);
-// Displays all the elements of the array
 void display(int a[], int n);
 
 int main()
@@ -43,10 +40,12 @@ int main()
                     n = 0;
                     break;
                 }
+
                 printf("Enter %d elements: ", n);
 
                 for(i = 0; i < n; i++)
                     scanf("%d", &a[i]);
+
                 break;
 
             case 2:
@@ -73,6 +72,7 @@ int main()
 
                 printf("\nSorted array: ");
                 display(a, n);
+
                 break;
 
             case 4:
@@ -84,53 +84,57 @@ int main()
     }
 }
 
+// Quick Sort Function
 void quickSort(int a[], int low, int high)
 {
     int p, i;
 
     if(low < high)
     {
-        // Place the pivot at its correct position
         p = partition(a, low, high);
 
         printf("Pivot %d placed at index %d: ", a[p], p);
+
         for(i = low; i <= high; i++)
             printf("%d ", a[i]);
 
         printf("\n");
 
-        // Sort the elements before and after the pivot
         quickSort(a, low, p - 1);
         quickSort(a, p + 1, high);
     }
 }
 
+// Partition Function (First Element as Pivot)
 int partition(int a[], int low, int high)
 {
-    int pivot = a[high];
-    int i = low - 1, j, temp;
+    int pivot = a[low];
+    int i = low + 1, j = high, temp;
 
-    // The last element is taken as the pivot
-    for(j = low; j < high; j++)
+    while(i <= j)
     {
-        // Move the elements smaller than the pivot to the left side
-        if(a[j] < pivot)
-        {
+        while(i <= high && a[i] <= pivot)
             i++;
+
+        while(a[j] > pivot)
+            j--;
+
+        if(i < j)
+        {
             temp = a[i];
             a[i] = a[j];
             a[j] = temp;
         }
     }
 
-    // Put the pivot between the smaller and the larger elements
-    temp = a[i + 1];
-    a[i + 1] = a[high];
-    a[high] = temp;
+    temp = a[low];
+    a[low] = a[j];
+    a[j] = temp;
 
-    return i + 1;
+    return j;
 }
 
+// Display Function
 void display(int a[], int n)
 {
     int i;
