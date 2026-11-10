@@ -1,84 +1,129 @@
-//name ; Priorty Queue
-//aim ;implementation of Priority queue using array
-//Author ;Shanu S
-//date ;3/08/2026
+// Name   : Priority Queue using Array
+// Aim    : To implement a priority queue using array
+// Author : Shanu S
+// Date   : 10/11/26
 
 #include <stdio.h>
-#define MAX 5
 
-void insert();
-void Delete();
+#define MAX 100
+
+int que[MAX], pro[MAX];
+int n = 0;
+
+// Function Prototypes
+void enqueue();
+void dequeue();
 void display();
-void peek();
 
-int data[MAX],pr[MAX];
-int count=0;
-
+// Main Function
 int main()
-  { int ch;
-    while (1)
-    {printf("1.insert \n 2. delete \n  3.display\n  4.peek  \n5.Exit \n ");
-     printf("\n enter choice");
-     scanf("%d",&ch);
-     switch(ch)
-      {case 1:insert(); break;
-       case 2:Delete(); break;
-       case 3:display(); break;
-       case 4:peek(); break;
-       case 5:return 0;
-       default: printf("invaild choice\n");
-      }
+{
+    int choice;
+
+    while(1)
+    {
+        printf("\n--- PRIORITY QUEUE ---");
+        printf("\n1. Enqueue");
+        printf("\n2. Dequeue");
+        printf("\n3. Display");
+        printf("\n4. Exit");
+
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch(choice)
+        {
+            case 1:
+                enqueue();
+                break;
+
+            case 2:
+                dequeue();
+                break;
+
+            case 3:
+                display();
+                break;
+
+            case 4:
+                return 0;
+
+            default:
+                printf("\nInvalid choice!");
+        }
     }
-  }
-void insert()
-   { int item,p,i;
-     if (count==MAX)
-     {printf("queue is full");
-      return;
-     }
-     printf("Enter Element :");
-     scanf("%d",&item);
-     printf("Enter the priority ");
-     scanf("%d",&p);
-     i=count-1;
-     while(i>=0 && pr[i]>p)
-       { data[i+1]=data[i];
-         pr[i+1]=pr[i];
-         i--;
-       }
-     data[i+1]=item;
-     pr[i+1]=p;
-     count++;
-   }
-void Delete()
-    { int i;
-      if (count==0)
-         {printf("queue is empty\n ");
-          return;
-          }
-         printf("Deleted = %d\n ",data[0]);
-         for(i=0;i<count-1;i++)
-           { data[i]=data[i+1];
-             pr[i]=pr[i+1];
-           }
-       count--;
+}
+
+// Enqueue Operation
+void enqueue()
+{
+    int item, p;
+
+    if(n == MAX)
+    {
+        printf("\nPriority Queue is Full!");
+        return;
     }
 
-void display()
-      { int i; 
-          if (count==0)
-            {printf("queue is empty\n ");
-             return;
-            }
-         printf("\n Element  \t  priority \n");
-         for(i=0;i<count;i++)
-         { printf("\n %d \t %d \n",data[i],pr[i]);
-         }
-      }
-void peek()
-     {if (count == 0)
-      { printf("queue is empty");
+    printf("\nEnter element: ");
+    scanf("%d", &item);
+
+    printf("Enter priority: ");
+    scanf("%d", &p);
+
+    que[n] = item;
+    pro[n] = p;
+
+    n++;
+
+    printf("\nElement inserted successfully!");
+}
+
+// Dequeue Operation
+void dequeue()
+{
+    int pos = 0, i;
+
+    if(n == 0)
+    {
+        printf("\nPriority Queue is Empty!");
         return;
-       }
-      printf("\n Highest priority element: %d with priority: %d\n", data[0], pr[0]);
-     }
+    }
+
+    for(i = 1; i < n; i++)
+    {
+        if(pro[i] < pro[pos])
+        {
+            pos = i;
+        }
+    }
+
+    printf("\nDeleted element: %d", que[pos]);
+
+    for(i = pos; i < n - 1; i++)
+    {
+        que[i] = que[i + 1];
+        pro[i] = pro[i + 1];
+    }
+
+    n--;
+}
+
+// Display Operation
+void display()
+{
+    int i;
+
+    if(n == 0)
+    {
+        printf("\nPriority Queue is Empty!");
+        return;
+    }
+
+    printf("\nElement\tPriority\n");
+
+    for(i = 0; i < n; i++)
+    {
+        printf("%d\t%d\n", que[i], pro[i]);
+    }
+}
