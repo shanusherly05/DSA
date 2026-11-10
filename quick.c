@@ -1,6 +1,5 @@
-
 // Name : Quick Sort
-// Aim : To sort a list of numbers in ascending order using quick sort
+// Aim : To sort a list of numbers in ascending order using Quick Sort
 // Author : Shanu S
 // Date : 25/10/26
 
@@ -50,7 +49,7 @@ int main()
 
             case 2:
                 if(n == 0)
-                    printf("Array is empty. Enter the elements first.\n");
+                    printf("Array is empty. Enter elements first.\n");
                 else
                 {
                     printf("Array: ");
@@ -62,7 +61,7 @@ int main()
             case 3:
                 if(n == 0)
                 {
-                    printf("Array is empty. Enter the elements first.\n");
+                    printf("Array is empty. Enter elements first.\n");
                     break;
                 }
 
@@ -88,18 +87,11 @@ int main()
 // Quick Sort Function
 void quickSort(int a[], int low, int high)
 {
-    int p, i;
+    int p;
 
     if(low < high)
     {
         p = partition(a, low, high);
-
-        printf("Pivot %d placed at index %d: ", a[p], p);
-
-        for(i = low; i <= high; i++)
-            printf("%d ", a[i]);
-
-        printf("\n");
 
         quickSort(a, low, p - 1);
         quickSort(a, p + 1, high);
@@ -130,6 +122,7 @@ int partition(int a[], int low, int high)
         }
     }
 
+    // Final swap with pivot
     temp = a[low];
     a[low] = a[end];
     a[end] = temp;
